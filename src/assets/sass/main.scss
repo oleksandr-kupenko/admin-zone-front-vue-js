@@ -1,19 +1,19 @@
-@import 'nullstyle';
-@import 'header';
-@import 'custom-elements';
-@import 'people-block';
-@import 'admin-body';
-@import 'admin-sidebar';
-@import 'sign-body';
+@import "nullstyle";
+@import "header";
+@import "custom-elements";
+@import "people-block";
+@import "admin-body";
+@import "admin-sidebar";
+@import "sign-body";
 
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,400italic,500,500italic,700,700italic,900,900italic,300italic,300,100italic,100');
-@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,400italic,500,500italic,700,700italic,900,900italic,300italic,300,100italic,100");
+@import url("https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600&display=swap");
 
 * {
   box-sizing: border-box;
 }
 
-[type='checkbox'] {
+[type="checkbox"] {
   vertical-align: middle;
 }
 
@@ -101,7 +101,7 @@ body {
   border: none;
   background: #0ad69c;
   border-radius: 2px;
-  font-family: 'Exo 2';
+  font-family: "Exo 2";
   font-style: normal;
   font-weight: 600;
   font-size: 16px;
@@ -123,6 +123,14 @@ body {
   margin-top: 40px;
 }
 
+.btn_disabled {
+  background-color: rgb(221, 220, 220);
+  cursor: no-drop;
+  &:hover {
+    background-color: rgb(221, 220, 220);
+  }
+}
+
 .page-list {
   font-size: 20px;
   margin: 8% auto;
@@ -130,4 +138,12 @@ body {
   a:hover {
     background-color: rgb(161, 161, 243);
   }
+}
+
+validationprovider {
+  width: 100%;
+}
+
+.entry-content ol:not([class]) li:before {
+  line-height: 1.3;
 }

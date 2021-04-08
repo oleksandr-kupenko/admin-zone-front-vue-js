@@ -6,101 +6,145 @@
   />
 
   <div class="content">
-    <form action="#" class="form sm-form">
+    <VForm @submit="onSubmit" :validation-schema="schema" class="form sm-form">
       <div class="sm-form__content">
         <div class="sm-form__title sm-form__title_dark">
           Complete your account
         </div>
-        <input
-          v-model="passText"
-          @input="clearingWarnPass"
+
+        <VField
+          v-model="password"
+          name="password"
+          rules="required"
           type="password"
           class="input-base m-0"
           placeholder="Create a password"
         />
+        <ErrorMessage name="password" class="sm-form__warn" />
         <div class="pass-indicator">
           <span
-            v-for="(item, index) in passStrengthChecker()"
+            v-for="(item, index) in passStrengthShowing()"
             :key="index"
             class="pass-indicator__item"
             :class="{
-              'pass-indicator__red': passStrengthChecker() === 1,
-              'pass-indicator__orange': passStrengthChecker() === 2,
-              'pass-indicator__green': passStrengthChecker() === 3,
+              'pass-indicator__red': passStrengthShowing() === 1,
+              'pass-indicator__orange': passStrengthShowing() === 2,
+              'pass-indicator__green': passStrengthShowing() === 3,
             }"
           ></span>
         </div>
-        <input
+
+        <VField
           v-model="passConfirmText"
+          name="passwordConfirm"
+          rules="required|confirmed:password|passStronged"
           type="password"
           class="input-base"
           placeholder="Confirm password"
         />
-        <div class="sm-form__warn" v-if="!isPassMatch">
-          Your password and confirmation password do not match
-        </div>
+        <ErrorMessage name="passwordConfirm" class="sm-form__warn" />
+
         <div class="confirm">
           <ul>
             <li v-for="confirm in confirms" :key="confirm.nameLink">
               <label class="confirm__lable">
+                <VField
+                  name="confirm"
+                  type="checkbox"
+                  :value="`${confirm.name}`"
+                >
+                </VField>
                 {{ confirm.title }}
                 <a :href="`${confirm.link}`">{{ confirm.nameLink }}</a>
-                <input
-                  @input="clearingWarnAgreements"
-                  v-model="confirm.checked"
-                  type="checkbox"
-                  name="terms"
-                  checked
-                />
                 <span class="checkmark"></span>
               </label>
             </li>
           </ul>
-          <div class="sm-form__warn" v-if="!isConfirmed">
-            You must accept all agreements
-          </div>
+          <ErrorMessage name="confirm" class="sm-form__warn" />
         </div>
+        <Captcha />
+        <!-- <div class="g-recaptcha">
+          <vue-recaptcha
+            siteKey="6Lds_W4aAAAAAMqoq26rXADQ0jlhnJDXkcKSx5ZE"
+            :show="show"
+            size="normal"
+            theme="light"
+            :tabindex="1"
+            @verify="recaptchaVerified"
+            @expire="recaptchaExpired"
+            @fail="recaptchaFailed"
+            ref="vueRecaptcha"
+          >
+          </vue-recaptcha>
+        </div> -->
 
-        <div
-          class="g-recaptcha"
-          data-sitekey="6Lds_W4aAAAAAMqoq26rXADQ0jlhnJDXkcKSx5ZE"
-        ></div>
-
-        <button @click="send" class="btn btn_todown" size="compact ">
+        <button
+          @click="onSubmit"
+          class="btn btn_todown"
+          :class="isCaptchaVerifie ? '' : 'btn_disabled'"
+          :disabled="!isCaptchaVerifie"
+        >
           Done!
         </button>
       </div>
-    </form>
+    </VForm>
   </div>
 
   <Footer />
 </template>
 
 <script>
+import Captcha from "../components/captcha/Captcha";
+import vueRecaptcha from "vue3-recaptcha2";
 import Header from "@/components/Header/Header.vue";
 import Footer from "@/components/Footer/Footer.vue";
+import * as VeeValidate from "vee-validate";
+import { defineRule } from "vee-validate";
+import { required, confirmed, passStronged } from "../services/validators";
+
+defineRule("required", required);
+defineRule("confirmed", confirmed);
+defineRule("passStronged", passStronged);
 
 export default {
   name: "Sign3",
   components: {
+    Captcha,
+    vueRecaptcha,
     Header,
     Footer,
+    VForm: VeeValidate.Form,
+    VField: VeeValidate.Field,
+    ErrorMessage: VeeValidate.ErrorMessage,
   },
   data: function () {
+    const schema = {
+      confirm(value) {
+        if (value) {
+          if (value?.length === 2) {
+            return true;
+          }
+        }
+        return "You must accept all agreements";
+      },
+    };
     return {
-      passText: "",
+      show: 1,
+      schema,
+      password: "",
       passConfirmText: "",
-      isPassMatch: true,
-      isConfirmed: true,
+      isCaptchaVerifie: false,
       confirms: [
         {
           title: "I agree to the myFixer.com",
+          name: "terms",
           nameLink: "Terms of Service",
           link: "#",
           checked: false,
         },
         {
           title: "I agree to the myFixer.com",
+          name: "polyci",
           nameLink: "Privacy Policy",
           link: "#",
           checked: false,
@@ -108,50 +152,41 @@ export default {
       ],
     };
   },
-  mounted() {
-    let recaptchaScript = document.createElement("script");
-    recaptchaScript.setAttribute(
-      "src",
-      "https://www.google.com/recaptcha/api.js?hl=en"
-    );
-    document.head.appendChild(recaptchaScript);
-  },
   methods: {
-    clearingWarnPass() {
-      this.isPassMatch = true;
+    recaptchaVerified(response) {
+      this.isCaptchaVerifie = true;
     },
-    clearingWarnAgreements() {
-      this.isConfirmed = true;
+    recaptchaExpired() {
+      this.$refs.vueRecaptcha.reset();
+      this.isCaptchaVerifie = false;
     },
-    passStrengthChecker() {
-      let mediumPassword = new RegExp(
+    recaptchaFailed() {
+      alert("Somthing was wrong with captcha");
+    },
+    clearingAllFields() {
+      this.password = "";
+      this.passConfirmText = "";
+      this.confirms.forEach((confirm) => (confirm.checked = false));
+    },
+    passStrengthShowing() {
+      const mediumPassword = new RegExp(
         "((?=.*[a-z])(?=.*[0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.{6,}))"
       );
-      let strongPassword = new RegExp(
+      const strongPassword = new RegExp(
         "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})"
       );
-      if (strongPassword.test(this.passText)) {
+      if (strongPassword.test(this.password)) {
         return 3;
       }
-      if (mediumPassword.test(this.passText)) {
+      if (mediumPassword.test(this.password)) {
         return 2;
       }
-      if (this.passText) {
+      if (this.password) {
         return 1;
       }
     },
-    passConfirmChecker() {
-      this.isPassMatch = this.passText == this.passConfirmText;
-      return this.isPassMatch;
-    },
-    agreeChecker() {
-      this.isConfirmed = this.confirms.every((confirm) => confirm.checked);
-      return this.isConfirmed;
-    },
-    send(e) {
-      e.preventDefault();
-      this.passConfirmChecker();
-      this.agreeChecker();
+    onSubmit(e) {
+      console.log("тут в будушем надо сделать передачу и clearingAllFields");
     },
   },
 };
