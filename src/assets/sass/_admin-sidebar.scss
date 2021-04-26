@@ -22,7 +22,7 @@
   height: 3rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;    
+  justify-content: center;
   :hover {
     opacity: 1;
   }
@@ -38,9 +38,13 @@
 }
 
 .sidebar-menu__item_active {
-  & .sidebar-menu__icon { 
+  & .sidebar-menu__icon {
     opacity: 1;
   }
   border-left: 4px solid #0ad69c;
-  
+}
+
+.sidebar-menu__icon_close {
+  cursor: no-drop;
+  opacity: 0.38 !important;
 }

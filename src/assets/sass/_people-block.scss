@@ -76,7 +76,7 @@
 }
 
 .checkmark:after {
-  content: '';
+  content: "";
   position: absolute;
   display: none;
 }
@@ -130,7 +130,7 @@
 .card-one__text {
   padding-left: 3%;
   h3 {
-   font-size: 1rem;
+    font-size: 1rem;
     font-weight: 500;
     line-height: 1.75rem;
     letter-spacing: -0.05px;
@@ -146,7 +146,7 @@
     font-weight: normal;
     color: #01134e;
   }
-  @media(min-width: 1400px) {
+  @media (min-width: 1400px) {
     h3 {
       font-size: 1.1vw;
       line-height: 1.925vw;
@@ -156,7 +156,7 @@
       line-height: 1.125rem;
     }
   }
-  @media(min-width: 1700px) {
+  @media (min-width: 1700px) {
     h3 {
       line-height: 2.5em;
     }
@@ -172,7 +172,7 @@
   padding-left: 10px;
   &:before {
     position: absolute;
-    content: url(/img/marker-map.svg);
+    content: url("~@/assets/img/marker-map.svg");
     left: -1px;
     top: 1px;
     transform: scale(0.7);
