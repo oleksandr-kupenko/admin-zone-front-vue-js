@@ -4,10 +4,11 @@ node_modules
 _npx
 vue
 views.zip
-public
 performance
 jsconfig.json
 webpack.config.js
+/public
+!components/public
 
 
 # local env files
