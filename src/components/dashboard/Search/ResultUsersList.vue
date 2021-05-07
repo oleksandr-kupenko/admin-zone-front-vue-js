@@ -4,10 +4,7 @@
       <router-link to="/search/map" class="card__link"> SHOW MAP </router-link>
       <div class="people-bloc_icons">
         <div class="signal">
-          <img
-            :src="require('../../../assets/img/signal.svg')"
-            alt="Signal level"
-          />
+          <img :src="require('@/assets/img/signal.svg')" alt="Signal level" />
         </div>
         <div class="sort">
           <label class="container"
@@ -39,7 +36,7 @@
       <div v-for="u in sortedUsers" :key="u.id" class="card-one">
         <div class="card-one__photo">
           <img
-            :src="require(`../../../assets/img/cards-photo/${u.avatar}`)"
+            :src="require(`@/assets/img/cards-photo/${u.avatar}`)"
             alt="Nane"
           />
         </div>
@@ -64,7 +61,7 @@
           </p>
           <p class="card-one__rate">
             <span class="card-one__line-name"> Base Daily Rate:</span>
-            $ {{ u.pricing }} USD
+            $ {{ rateLocaled(u.pricing) }} USD
           </p>
         </div>
       </div>
@@ -135,6 +132,11 @@ export default {
     showRating(ratingLevel) {
       const icons = ["star-bronze", "star-silver", "star-gold"];
       return icons[ratingLevel - 1];
+    },
+    rateLocaled(rate) {
+      return new Intl.NumberFormat("en-US", {
+        style: "decimal",
+      }).format(rate);
     },
   },
 };

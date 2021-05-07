@@ -1,9 +1,12 @@
 <template>
   <div class="custom-select" :class="{ 'country-selector': icon }">
     <vue-select
+      v-model="selectedValue"
       :modelValue="true"
       close-on-select
       :options="options"
+      :label-by="nameOption"
+      :value-by="nameOption"
       @selected="(option) => $emit('update:modelValue', option)"
     ></vue-select>
   </div>
@@ -17,18 +20,12 @@ export default {
   components: {
     VueSelect,
   },
-  props: {
-    options: Array,
-    icon: String,
-    modelValue: String,
-  },
+  props: ["options", "nameOption", "icon", "selected"],
   data() {
-    return {};
+    return {
+      selectedValue: this.selected,
+    };
   },
-  methods: {
-    ok() {
-      console.log("ok");
-    },
-  },
+  methods: {},
 };
 </script>

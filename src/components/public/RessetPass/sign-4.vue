@@ -56,6 +56,8 @@ import {
   notCyrillic,
 } from "../../../services/validators";
 import utils from "../../../services/utils";
+import { usersAPI } from "@/api/api";
+import router from "@/router";
 
 defineRule("required", required);
 defineRule("confirmed", confirmed);
@@ -79,8 +81,11 @@ export default {
     passStrengthLevel: function () {
       return utils.passStrengthLevel(this.password);
     },
-    onSubmit() {
-      console.log(this.password);
+    async onSubmit() {
+      const idUser = JSON.parse(localStorage.getItem("idUserForChangePass"));
+      let response = await usersAPI.resetPass(this.password, idUser);
+      localStorage.removeItem("idUserForChangePass");
+      router.push("/sign-1");
     },
   },
 };

@@ -19,11 +19,19 @@
 </template>
 
 <script>
+import router from "@/router";
 export default {
   name: "AlmostReady",
   components: {},
   props: {
     message: String,
+  },
+  beforeMount() {
+    if (JSON.parse(localStorage.getItem("idUserForChangePass"))) {
+      setTimeout(() => router.push("/sign-4"), 5000);
+    } else {
+      setTimeout(() => router.push("/sign-1"), 5000);
+    }
   },
 };
 </script>

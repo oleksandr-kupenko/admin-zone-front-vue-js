@@ -2,9 +2,9 @@
   <header class="header">
     <div class="header-row">
       <div class="logo">
-        <a href="/">
+        <router-link to="/">
           <img src="../assets/img/logo.svg" alt="myFixer logo" />
-        </a>
+        </router-link>
       </div>
       <div class="sign-link">
         {{ question }} <a href="#">{{ offer }}</a>

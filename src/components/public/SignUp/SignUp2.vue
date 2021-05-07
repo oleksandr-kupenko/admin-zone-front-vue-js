@@ -151,7 +151,6 @@ export default {
       ],
     };
   },
-  created: function () {},
   methods: {
     recaptchaVerified(response) {
       this.isCaptchaVerifie = true;

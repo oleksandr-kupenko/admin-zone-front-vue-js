@@ -76,6 +76,7 @@ export default {
       });
     },
   },
+  beforeMount() {},
   methods: {
     onSubmit() {
       console.log(this.dataRange[0]);

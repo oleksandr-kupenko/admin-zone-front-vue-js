@@ -2,53 +2,86 @@
   <div class="card">
     <div class="card-title">
       <h2 class="card-title__h2">
-        <router-link
-          to="/profile"
+        <div
+          @click="changeInfoBlock()"
           class="card-title__link"
           :class="{
-            'card-title__link_active': this.$route.path === '/profile',
+            'card-title__link_active': showingBlockPersonal,
           }"
         >
           PERSONAL INFORMATION
-        </router-link>
+        </div>
       </h2>
       <h2 class="card-title__h2">
-        <router-link
+        <div
+          @click="changeInfoBlock()"
           to="/profile/accaunt-info"
           class="card-title__link"
           :class="{
-            'card-title__link_active':
-              this.$route.path === '/profile/accaunt-info',
+            'card-title__link_active': !showingBlockPersonal,
           }"
-          >ACCOUNT INFORMATION</router-link
         >
+          ACCOUNT INFORMATION
+        </div>
       </h2>
     </div>
-    <router-view> </router-view>
+    <Preloader v-if="isLoading" />
+    <template v-if="showingBlockPersonal && !isLoading">
+      <PersonalInfo
+        :userInfoData="userInfoData"
+        :categoriesList="categoriesList"
+    /></template>
+    <template v-if="!showingBlockPersonal && !isLoading"
+      ><AccauntInfo :userInfoData="userInfoData"
+    /></template>
   </div>
 </template>
 
 <script>
+import Preloader from "../../Preloader";
 import PersonalInfo from "./PersonalInfo";
 import AccauntInfo from "./AccauntInfo";
+import { usersAPI } from "@/api/api";
 
 export default {
   name: "Profile",
   components: {
     PersonalInfo,
     AccauntInfo,
+    Preloader,
   },
 
   data() {
     return {
-      showingBlock: "personal",
+      isLoading: true,
+      showingBlockPersonal: true,
+      userInfoData: "",
+      categoriesList: "",
+      userId: this.$router.currentRoute.value.params.id,
     };
+  },
+  async beforeCreate() {
+    console.log("id222", this.$router.currentRoute.value.params);
+    if (this.$router.currentRoute.value.params.id) {
+      this.userId = this.$router.currentRoute.value.params.id;
+      this.userInfoData = await usersAPI.getUser(this.userId);
+    } else {
+      this.userId = "";
+      this.userInfoData = await usersAPI.getProfile();
+    }
+    this.categoriesList = await usersAPI.getAllCategories();
+    this.isLoading = false;
   },
   methods: {
     changeInfoBlock() {
-      this.showingBlock === "personal"
-        ? (this.showingBlock = "accaunt")
-        : (this.showingBlock = "personal");
+      this.showingBlockPersonal = !this.showingBlockPersonal;
+    },
+  },
+  watch: {
+    async $route() {
+      this.isLoading = true;
+      this.userInfoData = await usersAPI.getProfile();
+      this.isLoading = false;
     },
   },
 };

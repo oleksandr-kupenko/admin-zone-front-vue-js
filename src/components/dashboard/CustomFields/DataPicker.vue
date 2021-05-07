@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import Calendar from "primevue/calendar";
+import Calendar from "primevue/calendar/calendar.cjs";
 export default {
   name: "DataPicker",
   components: {

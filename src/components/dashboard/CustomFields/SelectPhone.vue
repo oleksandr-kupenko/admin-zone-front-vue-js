@@ -2,7 +2,7 @@
   <div class="phone-block">
     <div class="custom-select custom-select-flag">
       <vue-select
-        v-model="currentCode"
+        v-model="currentPhoneValue"
         close-on-select
         :options="options"
         placeholder=""
@@ -11,7 +11,7 @@
       >
         <template #dropdown-item="{ option }">
           <img
-            :src="'./img/flags/' + option.src + '.png'"
+            :src="require('@/assets/img/flags/' + option.src + '.png')"
             style="width: 1.5rem; margin: 0px 25%; vertical-align: middle"
           />
         </template>
@@ -40,11 +40,13 @@ export default {
   props: {
     options: Array,
     icon: String,
+    selected: String,
   },
   data() {
+    const code = this.selected ? this.selected : "+380";
     return {
-      currentCode: { code: "+380", src: "ukraine" },
-      code: "",
+      currentPhoneValue: { code: code, src: "ukraine" },
+      code,
     };
   },
   mounted() {
@@ -52,6 +54,10 @@ export default {
   },
   methods: {
     showModel() {
+      const getFlagImgUrl = (pic) => {
+        return require("../../../assets/img/flags/" + pic + ".png");
+      };
+
       const inputBlock = document.querySelector(
         ".custom-select-flag .vue-input"
       );
@@ -59,8 +65,8 @@ export default {
       flagDiv.className = "custom-select-flag__input";
       const flagImg = document.createElement("img");
       flagImg.className = "custom-select-flag__img";
-      if (this.currentCode) {
-        flagImg.src = "./img/flags/" + this.currentCode.src + ".png";
+      if (this.currentPhoneValue) {
+        flagImg.src = getFlagImgUrl(this.currentPhoneValue.src);
       }
       if (inputBlock) {
         if (document.querySelector(".custom-select-flag__input")) {
@@ -72,18 +78,18 @@ export default {
       }
     },
     putPhoneNumber() {
-      if (this.currentCode) {
-        if (!this.code.includes(this.currentCode.code)) {
-          this.code = this.currentCode.code;
-        }
+      if (
+        this.currentPhoneValue &&
+        !this.code.includes(this.currentPhoneValue.code)
+      ) {
+        this.code = this.currentPhoneValue.code;
       }
     },
     handleChange(event) {
-      console.log(isFinite(event.key));
       if (isFinite(event.key)) {
         this.code = this.code.includes
           ? event.target.value
-          : this.currentCode.code + event.target.value;
+          : this.currentPhoneValue.code + event.target.value;
       } else {
         event.preventDefault();
       }

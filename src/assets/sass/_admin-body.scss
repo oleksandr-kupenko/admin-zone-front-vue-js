@@ -301,12 +301,13 @@
 .profphoto-wrapp__change {
   padding-top: 5%;
   padding-left: 0.875rem;
-  cursor: pointer;
-  p {
+
+  label {
     font-size: 0.75rem;
     line-height: 0.875rem;
     letter-spacing: 0.28px;
     color: #35373b;
+    cursor: pointer;
   }
 }
 
@@ -465,8 +466,32 @@
   }
 }
 
+.thegrid__cell-name {
+  cursor: pointer;
+  &:hover {
+    background-color: #f5f7fa;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
 .thegrid-select {
   border-radius: none;
   background-color: #ffffff;
   border-bottom: none !important;
+}
+
+.pagination {
+  text-align: center;
+  padding-top: 10px;
+}
+
+.pag-bt {
+  padding: 10px;
+  margin-right: 2rem;
+  font-size: 1.5rem;
+  border: 2px solid #b3b4b7;
+  border-radius: 4px;
+  &:hover {
+    background-color: #85868a;
+  }
 }

@@ -8,15 +8,18 @@ import AdminZone from "../components/dashboard/AdminZone/AdminZone";
 
 const dashboarPagesRoutes = [
   {
+    path: "/profile/:id",
+    component: Profile,
+    meta: {
+      title: "Profile of user",
+    },
+  },
+  {
     path: "/profile",
     component: Profile,
     meta: {
       title: "Profile",
     },
-    children: [
-      { path: "/profile/", component: PersonalInfo },
-      { path: "/profile/accaunt-info", component: AccauntInfo },
-    ],
   },
   {
     path: "/search",
@@ -28,6 +31,14 @@ const dashboarPagesRoutes = [
       { path: "/search/", component: ResultUsersList },
       { path: "/search/map", component: ResultMap },
     ],
+  },
+  {
+    path: "/admin/:page",
+    query: { search: ":search" },
+    component: AdminZone,
+    meta: {
+      title: "Admin zone",
+    },
   },
   {
     path: "/admin",
