@@ -7,7 +7,11 @@
         </router-link>
       </div>
       <div class="sign-link">
-        {{ question }} <a href="#">{{ offer }}</a>
+        {{ question }}
+        <preloader v-if="isLoading" />
+        <router-link v-if="!isLoading" :to="{ path: link }">{{
+          offer
+        }}</router-link>
       </div>
     </div>
   </header>
@@ -18,35 +22,42 @@
 </template>
 
 <script>
+import Preloader from "@/components/Preloader.vue";
 export default {
+  components: { Preloader },
   name: "PublicLayout",
   data() {
     return {
+      isLoading: false,
       title: "",
       question: "",
+      link: "",
       offer: "",
     };
   },
-  mounted() {
-    this.getChildProps();
+  async created() {
+    this.isLoading = true;
+    await this.getChildProps();
+    this.isLoading = false;
   },
   methods: {
-    getChildProps() {
-      const puthCurrentChildren = this.$router.currentRoute.value.path;
-      const arrChildrens = this.$router.options.routes[0].children;
+    async getChildProps() {
+      const puthCurrentChildren = await this.$router.currentRoute.value.path;
+      const arrChildrens = await this.$router.options.routes[0].children;
       let childProps = arrChildrens.filter(
         (children) => children.path == puthCurrentChildren
       )[0]?.props;
       if (childProps) {
-        this.question = childProps.question;
-        this.offer = childProps.offer;
+        this.question = await childProps.question;
+        this.offer = await childProps.offer;
+        this.link = await childProps.link;
       } else {
         (this.question = ""), (this.offer = "");
       }
     },
   },
   watch: {
-    $route(to, from) {
+    $route() {
       this.getChildProps();
     },
   },

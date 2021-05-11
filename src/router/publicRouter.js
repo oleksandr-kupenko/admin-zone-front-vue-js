@@ -20,6 +20,7 @@ const publicPagesRoutes = [
     props: {
       question: "Do not have an account?",
       offer: "Sign up",
+      link: "/sign-up-1",
     },
   },
   {
@@ -31,6 +32,7 @@ const publicPagesRoutes = [
     props: {
       question: "Back to",
       offer: "Sign in",
+      link: "/sign-1",
     },
   },
   {
@@ -43,6 +45,7 @@ const publicPagesRoutes = [
       question: "Back to",
       offer: "Sign in",
       message: "Please check your email to reset your password",
+      link: "/sign-1",
     },
   },
   {
@@ -54,6 +57,7 @@ const publicPagesRoutes = [
     props: {
       question: "Do not have an account?",
       offer: "Sign up",
+      link: "/sign-up-1",
     },
   },
   {
@@ -65,6 +69,7 @@ const publicPagesRoutes = [
     props: {
       question: "Already have an account?",
       offer: "Log In",
+      link: "/sign-1",
     },
   },
   {
@@ -76,6 +81,7 @@ const publicPagesRoutes = [
     props: {
       question: "Already have an account?",
       offer: "Log In",
+      link: "/sign-1",
     },
   },
   {
@@ -88,6 +94,7 @@ const publicPagesRoutes = [
       question: "Already have an account?",
       offer: "Log In",
       message: "Please check your email to activate your account",
+      link: "/sign-1",
     },
   },
 ];

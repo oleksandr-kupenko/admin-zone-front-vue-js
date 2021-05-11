@@ -11,15 +11,15 @@
             <span></span>
           </div>
           <div class="logo logo-sm">
-            <router-link to="/">
-              <img src="../assets/img/logo.svg" alt="myFixer logo" />
+            <router-link to="@/">
+              <img src="@/assets/img/logo.svg" alt="myFixer logo" />
             </router-link>
           </div>
         </div>
 
         <div class="breadcrumbs">
-          <a href="/" class="breadcrums-element">Home</a>
-          <a href="#" class="breadcrums-element">My profile</a>
+          <router-link to="@/" class="breadcrums-element">Home</router-link>
+          <a href="#" class="breadcrums-element">{{ pageName }}</a>
         </div>
         <details class="profile-detalis">
           <summary class="profile-detalis__summary">Faruh Bernandez</summary>
@@ -47,12 +47,20 @@ export default {
   data() {
     return {
       isOpenMenu: false,
+      pageName: this.getTitle(),
     };
   },
   methods: {
     openMenu() {
       this.isOpenMenu = !this.isOpenMenu;
-      console.log(this.isOpenMenu);
+    },
+    getTitle() {
+      return this.$route.matched[1].meta.title;
+    },
+  },
+  watch: {
+    $route() {
+      this.pageName = this.getTitle();
     },
   },
 };

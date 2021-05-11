@@ -31,13 +31,11 @@ if (
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         data === 23505 ? alert("Email must be unique") : clearInput();
       });
 
     function clearInput() {
       inputs.forEach((input) => (input.value = ""));
-      console.log("user was send for add");
     }
   };
 }

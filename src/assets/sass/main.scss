@@ -123,7 +123,12 @@ body {
 
 .btn_lg {
   width: 100%;
-  margin-top: 8px;
+  margin-top: 15px;
+}
+
+.btn_loading {
+  cursor: no-drop;
+  opacity: 0.25;
 }
 
 .btn_todown {

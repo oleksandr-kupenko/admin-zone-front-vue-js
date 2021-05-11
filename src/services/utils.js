@@ -17,7 +17,7 @@ var utils = {
     }
   },
 
-  getBase64(file) {
+  convertToBase64(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);

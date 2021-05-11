@@ -10,7 +10,6 @@ document
         body: JSON.stringify({ userId: e.target.attributes.data.value }),
       })
         .then(() => {
-          console.log("removed");
           location.reload();
         })
         .catch((err) => {

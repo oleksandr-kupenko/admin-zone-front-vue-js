@@ -166,14 +166,15 @@ export default {
       return utils.passStrengthLevel(this.password);
     },
 
-    onSubmit(e) {
+    async onSubmit(e) {
       let newUser = JSON.parse(localStorage.getItem("newUser"));
       if (!newUser) {
         router.push("/sign-up-1");
       } else {
-        newUser.passwoed = this.password;
+        newUser.password = this.password;
         localStorage.setItem("newUser", JSON.stringify(newUser));
-        usersAPI.createUser(newUser);
+        const response = await usersAPI.createUser(newUser);
+        router.push("/sign-up-6");
       }
     },
   },

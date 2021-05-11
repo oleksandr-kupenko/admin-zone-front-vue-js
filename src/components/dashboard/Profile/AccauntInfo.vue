@@ -19,7 +19,7 @@
         >
       </div>
       <div class="admin-field fields-block__item fields-block__item_right">
-        <button @click="onSubmit" class="btn btn_lg">SAVE</button>
+        <big-button @click="onSubmit" :isLoading="isLoading" title="SAVE" />
       </div>
     </div>
   </div>
@@ -27,36 +27,45 @@
 
 <script>
 import { usersAPI } from "@/api/api";
+import BigButton from "@/components/BigButton.vue";
 
 export default {
+  components: { BigButton },
   name: "AccauntInfo",
   props: {
     userInfoData: Object,
   },
   data() {
     return {
+      isLoading: false,
       username: this.userInfoData.username,
       email: this.userInfoData.email,
     };
   },
   methods: {
     async onSubmit() {
+      this.isLoading = true;
       let checkIs = (value) => {
-        const result = this[value] ? this[value] : this.userInfoData[value];
-        console.log(result);
-        return result;
+        if (this[value] && this[value] !== "null") {
+          return this[value];
+        }
+        return "";
       };
       const userUpdateData = {
-        fname: checkIs("fname"),
-        lname: checkIs("lname"),
+        fname: this.userInfoData.fname,
+        lname: this.userInfoData.lname,
+        gender: this.userInfoData.gender,
         username: checkIs("username"),
-        categoryId: checkIs("categoryId"),
-        country: checkIs("country"),
+        categoryId: this.userInfoData.categoryId,
+        country: this.userInfoData.country,
         email: checkIs("email"),
-        phone: checkIs("phone"),
+        phone: this.userInfoData.phone,
+        stack: this.userInfoData.stack,
+        rate: this.userInfoData.rate,
       };
+      usersAPI.updateProfile(userUpdateData);
 
-      const response = await usersAPI.updateProfile(userUpdateData);
+      setTimeout(() => (this.isLoading = false), 500);
     },
   },
 };

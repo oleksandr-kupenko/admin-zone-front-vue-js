@@ -27,7 +27,9 @@
           <div class="thegrid__cell thegrid__cell-name">
             <router-link :to="`/profile/${u.id}`">{{ u.fname }}</router-link>
           </div>
-          <div class="thegrid__cell thegrid__cell-name">{{ u.lname }}</div>
+          <div class="thegrid__cell thegrid__cell-name">
+            <router-link :to="`/profile/${u.id}`">{{ u.lname }}</router-link>
+          </div>
           <div class="thegrid__cell">{{ u.country }}</div>
           <div class="thegrid__cell">
             {{ u.isRequested ? "Expected" : "Completed" }}
@@ -40,16 +42,30 @@
             </select>
           </div>
           <div class="thegrid__cell">{{ u.email }}</div>
-          <div class="thegrid__cell thegrid__close"><p>&#10006;</p></div>
+          <div @click="deleteUser(u.id)" class="thegrid__cell thegrid__close">
+            <p>&#10006;</p>
+          </div>
         </template>
       </div>
     </div>
     <div class="pagination">
-      <button v-if="page > 1" @click="prevPage()" class="pag-bt">
+      <button :disabled="page < 1" @click="prevPage()" class="pag-bt">
         &#8592;
       </button>
+      <div class="pagination_pagesList">
+        <div
+          @click="clickPaginationPage(index)"
+          class="pagination_page"
+          v-for="(p, index) in countPages()"
+          :key="index"
+          :class="{ 'pag-bt__active': currentPage == index + 1 }"
+        >
+          {{ index + 1 }}
+        </div>
+      </div>
+
       <button
-        v-if="this.countUsers > this.endIndex"
+        :disabled="this.countUsers < this.endIndex"
         @click="nextPage()"
         class="pag-bt"
       >
@@ -68,10 +84,10 @@ export default {
     return {
       usersList: "",
       countUsers: "",
-      page: 1,
+      currentPage: 1,
       startIndex: "",
       endIndex: "",
-      limitUsers: 6,
+      limitUsers: 5,
       searchValue: "",
     };
   },
@@ -80,14 +96,14 @@ export default {
       this.searchValue = this.$router.currentRoute.value.query.search;
     }
     if (this.$router.currentRoute.value.params.page) {
-      this.page = this.$router.currentRoute.value.params.page;
+      this.currentPage = this.$router.currentRoute.value.params.page;
     }
-    this.getPages();
+    this.downloadPage();
   },
   methods: {
-    async getPages() {
-      this.startIndex = (this.page - 1) * 4;
-      this.endIndex = this.page * 4;
+    async downloadPage() {
+      this.startIndex = (this.currentPage - 1) * this.limitUsers;
+      this.endIndex = this.currentPage * this.limitUsers;
       this.usersList = await usersAPI.getUsersList(
         this.startIndex,
         this.limitUsers,
@@ -97,28 +113,47 @@ export default {
       this.countUsers = countUsersRequest.count;
     },
     prevPage() {
-      --this.page;
+      --this.currentPage;
       this.changeUrl();
-      this.getPages();
+      this.downloadPage();
     },
     nextPage() {
-      ++this.page;
+      ++this.currentPage;
       this.changeUrl();
-      this.getPages();
+      this.downloadPage();
     },
+    countPages() {
+      return Math.ceil(this.countUsers / this.limitUsers);
+    },
+    clickPaginationPage(index) {
+      this.currentPage = index + 1;
+      this.changeUrl();
+      this.downloadPage();
+    },
+
     changeUrl() {
       this.searchValue
-        ? router.push(`/admin/${this.page}?search=${this.searchValue}`)
-        : router.push(`/admin/${this.page}`);
+        ? router.push(`/admin/${this.currentPage}?search=${this.searchValue}`)
+        : router.push(`/admin/${this.currentPage}`);
     },
     async search() {
-      router.push(`/admin/${this.page}?search=${this.searchValue}`);
+      router.push(`/admin/${this.currentPage}?search=${this.searchValue}`);
       this.usersList = await usersAPI.getUsersList(
         this.startIndex,
         this.limitUsers,
         this.searchValue
       );
-      console.log("search", this.usersList);
+    },
+    async deleteUser(id) {
+      const response = await usersAPI.deleteUser(id);
+      const countUsersRequest = await usersAPI.getCountUsers();
+      this.countUsers = countUsersRequest.count;
+      if (this.countPages() < this.currentPage) {
+        this.currentPage = this.currentPage - 1;
+        console.log(this.countPages(), this.currentPage);
+      }
+      this.changeUrl();
+      this.downloadPage();
     },
   },
 };

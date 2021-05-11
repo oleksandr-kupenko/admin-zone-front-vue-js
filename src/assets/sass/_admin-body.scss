@@ -240,8 +240,10 @@
 }
 
 .fields-block__item {
+  position: relative;
   flex-basis: 47%;
-  min-width: 220px;
+  min-width: 13.75rem;
+  height: 5rem;
   align-self: center;
   margin-right: 10px;
   @media (max-width: 560px) {
@@ -431,6 +433,10 @@
         font-size: 1.2rem;
       }
     }
+
+    :first-child {
+      border-bottom: none;
+    }
   }
   :nth-child(n + 15) {
     border-top: 1px solid #eef2f7;
@@ -468,9 +474,15 @@
 
 .thegrid__cell-name {
   cursor: pointer;
+  border: none;
   &:hover {
     background-color: #f5f7fa;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  a {
+    color: #000000;
+    text-decoration: none;
+    border: none;
   }
 }
 
@@ -481,17 +493,41 @@
 }
 
 .pagination {
-  text-align: center;
   padding-top: 10px;
+  justify-content: center;
+  display: flex;
+  margin: 0 auto;
+}
+
+.pagination_pagesList {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination_page {
+  flex-basis: 30px;
+  padding: 10px;
+  font-size: 1.2rem;
+  border: 2px solid #b3b4b7;
+  border-radius: 4px;
+  cursor: pointer;
+  &:hover {
+    background-color: #85868a;
+  }
 }
 
 .pag-bt {
   padding: 10px;
-  margin-right: 2rem;
+
   font-size: 1.5rem;
   border: 2px solid #b3b4b7;
   border-radius: 4px;
   &:hover {
     background-color: #85868a;
   }
+}
+
+.pag-bt__active {
+  background-color: #85868a;
 }

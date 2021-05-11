@@ -54,10 +54,8 @@ export default {
       this.incorectPass = false;
 
       let response = await usersAPI.login(this.login, this.password);
-      console.log(response);
       if (response.tokens) {
         saveTokens(response.tokens);
-        console.log("new roken", response.tokens);
         return router.push("/profile");
       } else {
         if (

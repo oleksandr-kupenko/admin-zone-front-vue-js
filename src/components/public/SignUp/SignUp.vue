@@ -87,7 +87,6 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log(this.fname, this.lname, this.username, this.email);
       let newUser = {
         fname: this.fname,
         lname: this.lname,
@@ -95,7 +94,6 @@ export default {
         email: this.email,
       };
       localStorage.setItem("newUser", JSON.stringify(newUser));
-      console.log(localStorage.getItem("newUser"));
       this.firstPage = false;
       router.push("/sign-up-2");
     },

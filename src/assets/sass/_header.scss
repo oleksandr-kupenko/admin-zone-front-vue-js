@@ -30,6 +30,7 @@
 }
 
 .sign-link {
+  position: relative;
   font-family: Roboto;
   font-style: normal;
   font-weight: 300;
@@ -50,6 +51,7 @@
   line-height: 1.4375em;
   letter-spacing: 0.7px;
   a {
+    cursor: pointer;
     color: #252f48;
     margin-right: 0.625em;
   }
@@ -62,7 +64,7 @@
     cursor: default;
   }
   :last-child::after {
-    content: '';
+    content: "";
   }
   @media (max-width: 768px) {
     display: none;
@@ -143,7 +145,7 @@
     height: 1.25rem;
     &::before,
     &::after {
-      content: '';
+      content: "";
       background-color: #2a74db;
       position: absolute;
       width: 100%;

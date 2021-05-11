@@ -17,17 +17,19 @@ export const usersAPI = {
   },
 
   refrehsTokens(refreshToken) {
+    debugger;
     return instance
       .get("/users/refresh/token", {
         headers: { Authorization: `JWT ${refreshToken}` },
       })
       .then((res) => {
         return res.data;
-      });
+      })
+      .catch((error) => error.response.data);
   },
 
   async updatePhoto(photoFile, email) {
-    const photoBase64 = await utils.getBase64(photoFile);
+    const photoBase64 = await utils.convertToBase64(photoFile);
     const accesToken = await getAccessToken();
     return instance
       .put(
@@ -56,6 +58,8 @@ export const usersAPI = {
           country: userUpdateData.country,
           email: userUpdateData.email,
           phone: userUpdateData.phone,
+          stack: userUpdateData.stack,
+          rate: userUpdateData.rate,
         },
         {
           headers: {
@@ -74,12 +78,12 @@ export const usersAPI = {
           Authorization: `JWT ${accesToken}`,
         },
       })
-      .then((res) => res.data);
+      .then((res) => res.data)
+      .catch((error) => error.response.data);
   },
 
   async getUser(id) {
     const accesToken = await getAccessToken();
-    console.log("api", accesToken);
     return instance
       .get(`/users/${id}`, {
         headers: {
@@ -93,9 +97,10 @@ export const usersAPI = {
     return instance.get(`/categories`).then((res) => res.data);
   },
 
-  getUsersList(min, max, search) {
+  getUsersList(min, max, search, country, category, stack, sort) {
+    console.log(min, max, search, country, category, stack, sort);
     return instance
-      .post(`/users`, { min, max, search })
+      .post(`/users`, { min, max, search, country, category, stack, sort })
       .then((res) => res.data);
   },
 
@@ -105,22 +110,22 @@ export const usersAPI = {
 
   deleteUser(userId) {
     return instance
-      .delete(`/users`, { userId: userId })
+      .delete(`/users`, { data: { userId: userId } })
       .then((res) => res.data);
   },
 
   createUser(newUser) {
     return instance
-      .post(`/users`, {
+      .post(`/users/sign-up`, {
         fname: newUser.fname,
         lname: newUser.lname,
         username: newUser.username,
-        categoryId: newUser.categoryId,
-        country: newUser.country,
+        email: newUser.email,
         isRequested: newUser.isRequested,
         password: newUser.password,
       })
-      .then((res) => res.data);
+      .then((res) => res.data)
+      .catch((error) => error.response.data);
   },
 
   checkUserEmail(email) {

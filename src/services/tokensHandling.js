@@ -6,7 +6,6 @@ export const saveTokens = (tokens) => {
   document.cookie = `tokens=${JSON.stringify(tokens)}; expires=${new Date(
     tokens.refreshTokenExpirationDate
   )}; path=/`;
-  debugger;
   console.log("save", JSON.parse(utils.getCookie("tokens")));
 };
 

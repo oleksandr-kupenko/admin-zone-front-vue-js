@@ -30,6 +30,8 @@
       <PersonalInfo
         :userInfoData="userInfoData"
         :categoriesList="categoriesList"
+        :stackList="stackList"
+        @updatedPhoto="updatedPhoto"
     /></template>
     <template v-if="!showingBlockPersonal && !isLoading"
       ><AccauntInfo :userInfoData="userInfoData"
@@ -42,6 +44,7 @@ import Preloader from "../../Preloader";
 import PersonalInfo from "./PersonalInfo";
 import AccauntInfo from "./AccauntInfo";
 import { usersAPI } from "@/api/api";
+import stacklist from "@/data/stackList";
 
 export default {
   name: "Profile",
@@ -57,11 +60,11 @@ export default {
       showingBlockPersonal: true,
       userInfoData: "",
       categoriesList: "",
+      stackList: stacklist(),
       userId: this.$router.currentRoute.value.params.id,
     };
   },
   async beforeCreate() {
-    console.log("id222", this.$router.currentRoute.value.params);
     if (this.$router.currentRoute.value.params.id) {
       this.userId = this.$router.currentRoute.value.params.id;
       this.userInfoData = await usersAPI.getUser(this.userId);
@@ -75,6 +78,9 @@ export default {
   methods: {
     changeInfoBlock() {
       this.showingBlockPersonal = !this.showingBlockPersonal;
+    },
+    updatedPhoto(photo) {
+      this.userInfoData.photo = photo;
     },
   },
   watch: {

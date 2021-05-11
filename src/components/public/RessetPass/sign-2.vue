@@ -46,7 +46,6 @@ export default {
   methods: {
     async onSubmit() {
       const response = await usersAPI.checkUserEmail(this.email);
-      console.log(response);
       if (response.id) {
         localStorage.setItem(
           "idUserForChangePass",

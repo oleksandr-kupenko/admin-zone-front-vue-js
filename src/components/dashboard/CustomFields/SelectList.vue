@@ -1,18 +1,25 @@
 <template>
-  <div class="custom-select" :class="{ 'country-selector': icon }">
+  <div
+    v-if="options"
+    class="custom-select"
+    :class="{ 'country-selector': icon }"
+  >
     <vue-select
       v-model="selectedValue"
       :modelValue="true"
       close-on-select
+      clear-on-close
       :options="options"
       :label-by="nameOption"
-      :value-by="nameOption"
-      @selected="(option) => $emit('update:modelValue', option)"
+      :value-by="valueOption"
+      searchable
+      @update:modelValue="(option) => $emit('update:modelValue', option)"
     ></vue-select>
   </div>
 </template>
 
 <script>
+import { ref } from "vue";
 import VueSelect from "vue-next-select";
 
 export default {
@@ -20,11 +27,21 @@ export default {
   components: {
     VueSelect,
   },
-  props: ["options", "nameOption", "icon", "selected"],
+  props: [
+    "options",
+    "nameOption",
+    "valueOption",
+    "icon",
+    "selected",
+    "searchable",
+  ],
   data() {
     return {
       selectedValue: this.selected,
     };
+  },
+  created() {
+    console.log("selected", this.selectedValue);
   },
   methods: {},
 };

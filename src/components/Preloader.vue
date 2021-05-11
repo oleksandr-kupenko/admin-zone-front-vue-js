@@ -1,5 +1,5 @@
 <template>
-  <div class="preloader">
+  <div class="preloader" v-bind:style="{ top: top }">
     <img src="../assets/img/preloader.gif" alt="preloader" />
   </div>
 </template>
@@ -7,6 +7,12 @@
 <script>
 export default {
   name: "Preloader",
+  props: {
+    top: {
+      type: String,
+      default: "40%",
+    },
+  },
 };
 </script>
 

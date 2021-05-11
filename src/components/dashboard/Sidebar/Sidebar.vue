@@ -50,7 +50,6 @@ export default {
   },
   mounted() {
     this.changeCurrentUrl();
-    console.log(this.isOpenMenu);
   },
   methods: {
     changeCurrentUrl() {
