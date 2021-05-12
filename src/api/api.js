@@ -2,10 +2,10 @@ import axios, { AxiosResponse } from "axios";
 import { getAccessToken } from "@/services/tokensHandling";
 
 import utils from "@/services/utils";
-
+console.log();
 const instance = axios.create({
   withCredentials: false,
-  baseURL: "http://localhost:3000",
+  baseURL: `http://${process.env.VUE_APP_API_URL}`,
 });
 
 export const usersAPI = {

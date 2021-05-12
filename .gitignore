@@ -9,7 +9,7 @@ jsconfig.json
 webpack.config.js
 /public
 !components/public
-
+.env
 
 # local env files
 .env.local
