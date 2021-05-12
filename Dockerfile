@@ -6,7 +6,10 @@ RUN npm install
 COPY . /app
 
 ARG PORT
+ARG VUE_APP_API_URL
+
 ENV PORT=$PORT
+ENV VUE_APP_API_URL=$VUE_APP_API_URL
 
 RUN npm run build
 
