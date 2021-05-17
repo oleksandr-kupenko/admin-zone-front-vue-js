@@ -40,9 +40,6 @@ export default {
       selectedValue: this.selected,
     };
   },
-  created() {
-    console.log("selected", this.selectedValue);
-  },
   methods: {},
 };
 </script>

@@ -372,6 +372,17 @@
   opacity: 0.2;
 }
 
+.wrapper-input {
+  &::after {
+    content: "×";
+    font-size: 1.5rem;
+    color: #b5afaf;
+    cursor: pointer;
+    font-weight: 300;
+    font-family: Arial, sans-serif;
+  }
+}
+
 .thegrid {
   display: grid;
   grid-template-columns: repeat(6, auto) 6%;

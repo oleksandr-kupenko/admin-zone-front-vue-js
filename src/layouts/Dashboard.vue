@@ -21,10 +21,20 @@
           <router-link to="@/" class="breadcrums-element">Home</router-link>
           <a href="#" class="breadcrums-element">{{ pageName }}</a>
         </div>
-        <details class="profile-detalis">
-          <summary class="profile-detalis__summary">Faruh Bernandez</summary>
-          <p>Some info and links.</p>
-        </details>
+        <div class="header__profile">
+          <div class="header__avatar">
+            <img :src="currentUser.photo" alt="" />
+          </div>
+          <details class="profile-detalis">
+            <summary class="profile-detalis__summary">
+              {{ currentUser.fname }} {{ currentUser.lname }}
+            </summary>
+            <div class="profile-detalis_content">
+              <p><router-link to="/profile">Setting profile</router-link></p>
+              <p @click="logout">Log out</p>
+            </div>
+          </details>
+        </div>
       </div>
     </header>
     <Sidebar :isOpenMenu="isOpenMenu" />
@@ -40,7 +50,10 @@
 </template>
 
 <script>
-import Sidebar from "../components/dashboard/Sidebar/Sidebar";
+import Sidebar from "@/components/dashboard/Sidebar/Sidebar";
+import { usersAPI } from "@/api/api";
+import { killTokens } from "@/services/tokensHandling";
+
 export default {
   components: { Sidebar },
   name: "DashboardLayout",
@@ -48,7 +61,11 @@ export default {
     return {
       isOpenMenu: false,
       pageName: this.getTitle(),
+      currentUser: "",
     };
+  },
+  async beforeCreate() {
+    this.currentUser = await usersAPI.getProfile();
   },
   methods: {
     openMenu() {
@@ -56,6 +73,9 @@ export default {
     },
     getTitle() {
       return this.$route.matched[1].meta.title;
+    },
+    logout() {
+      killTokens();
     },
   },
   watch: {

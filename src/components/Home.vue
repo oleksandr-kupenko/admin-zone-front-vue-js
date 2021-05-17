@@ -2,7 +2,7 @@
   <nav class="nav">
     <ul>
       <li><router-link to="/">Home</router-link></li>
-      <li><router-link to="/sign-1">Sign1</router-link></li>
+      <li><router-link to="/">Sign1</router-link></li>
       <li><router-link to="/sign-2">Sign2</router-link></li>
       <li><router-link to="/sign-3">Sign3</router-link></li>
       <li><router-link to="/sign-4">Sign4</router-link></li>

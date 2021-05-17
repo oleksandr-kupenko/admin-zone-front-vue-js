@@ -40,6 +40,7 @@
             v-model="stack"
             :options="stackList"
             searchable="true"
+            selected="[]"
           />
         </div>
         <div class="admin-field">
@@ -49,12 +50,15 @@
         </div>
         <button @click="onSubmit()" class="btn btn_lg">SEARCH</button>
       </div>
-      <template v-if="showingBlockUsers && !isLoading">
-        <ResultUsersList
+      <preloader v-if="isLoading" />
+      <template v-if="!isLoading">
+        <result-users-list
+          v-if="showingBlockUsers"
           :usersList="usersList"
           @checkSort="checkSort"
           @intersect="intersect"
         />
+        <result-map v-if="!showingBlockUsers" />
       </template>
     </div>
   </div>
@@ -68,6 +72,8 @@ import ResultUsersList from "./ResultUsersList";
 import ResultMap from "./ResultMap";
 import { usersAPI } from "@/api/api";
 import stacklist from "@/data/stackList";
+import countriesList from "@/data/countriesList";
+import Preloader from "@/components/Preloader.vue";
 
 export default {
   name: "Search",
@@ -77,6 +83,7 @@ export default {
     ResultUsersList,
     ResultMap,
     MultiSelectList,
+    Preloader,
   },
   data() {
     return {
@@ -84,7 +91,7 @@ export default {
       country: "",
       search: "",
       stackList: stacklist(),
-      countriesList: ["Ukraine", "Tourkey", "Egypt"],
+      countriesList: countriesList(),
       categoriesList: [],
       stack: "",
       dataRange: "",
@@ -97,7 +104,6 @@ export default {
     };
   },
   async created() {
-    this.isLoading = true;
     await this.downloadMoreUsers();
     this.categoriesList = await usersAPI.getAllCategories();
     this.isLoading = false;
@@ -113,6 +119,7 @@ export default {
   },
   methods: {
     getUsers() {
+      this.isLoading = true;
       const response = usersAPI.getUsersList(
         this.min,
         this.max,
@@ -122,13 +129,12 @@ export default {
         this.stack.length === 0 ? "" : this.stack,
         this.sortByPrice
       );
-      console.log("response", response);
+      console.log(response);
+      this.isLoading = false;
       return response;
     },
     async downloadMoreUsers() {
       const newUsers = await this.getUsers();
-      console.log("before", this.usersList);
-      console.log("plus", this.newUsers);
       this.usersList = [...this.usersList, ...newUsers];
     },
     async searchUsers() {
@@ -148,6 +154,16 @@ export default {
         : (this.sortByPrice = false);
 
       this.searchUsers();
+    },
+    changeBlock() {
+      this.$route.path === "/search/map"
+        ? (this.showingBlockUsers = false)
+        : (this.showingBlockUsers = true);
+    },
+  },
+  watch: {
+    $route() {
+      this.changeBlock();
     },
   },
 };

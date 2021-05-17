@@ -85,7 +85,7 @@ export default {
       const idUser = JSON.parse(localStorage.getItem("idUserForChangePass"));
       let response = await usersAPI.resetPass(this.password, idUser);
       localStorage.removeItem("idUserForChangePass");
-      router.push("/sign-1");
+      router.push("/");
     },
   },
 };

@@ -4,13 +4,16 @@
       <span class="search-table__ico"
         ><img src="/img/search-icon.svg" alt="search-icon"
       /></span>
+
       <input
         v-model="searchValue"
         @focusout="search"
+        v-on:keydown.enter="search"
         type="text"
         class="search-table__input"
         placeholder="Type here to search..."
       />
+      <span @click="clearSearch" class="wrapper-input"> </span>
     </div>
     <div class="wrap-table-admin">
       <div class="thegrid">
@@ -32,13 +35,24 @@
           </div>
           <div class="thegrid__cell">{{ u.country }}</div>
           <div class="thegrid__cell">
-            {{ u.isRequested ? "Expected" : "Completed" }}
+            <input
+              type="checkbox"
+              @change="changeStatus"
+              :checked="u.isAdmin"
+              :data="u.id"
+            />
+            {{ u.isAdmin ? "Admin" : "User" }}
           </div>
           <div class="thegrid__cell">
-            <select name="level" class="thegrid-select">
-              <option value="">Gold</option>
-              <option value="">Silver</option>
-              <option value="">Bronze</option>
+            <select
+              :id="u.id"
+              name="level"
+              @change="changeLevel(u.id)"
+              class="thegrid-select"
+            >
+              <option :selected="u.rating === 3" value="3">Gold</option>
+              <option :selected="u.rating === 2" value="2">Silver</option>
+              <option :selected="u.rating === 1" value="1">Bronze</option>
             </select>
           </div>
           <div class="thegrid__cell">{{ u.email }}</div>
@@ -49,14 +63,14 @@
       </div>
     </div>
     <div class="pagination">
-      <button :disabled="page < 1" @click="prevPage()" class="pag-bt">
+      <button :disabled="currentPage < 2" @click="prevPage()" class="pag-bt">
         &#8592;
       </button>
       <div class="pagination_pagesList">
         <div
           @click="clickPaginationPage(index)"
           class="pagination_page"
-          v-for="(p, index) in countPages()"
+          v-for="(p, index) in countPages"
           :key="index"
           :class="{ 'pag-bt__active': currentPage == index + 1 }"
         >
@@ -89,16 +103,21 @@ export default {
       endIndex: "",
       limitUsers: 5,
       searchValue: "",
+      countPages: "",
+      level: "1",
     };
   },
   async created() {
     if (this.$router.currentRoute.value.query.search) {
-      this.searchValue = this.$router.currentRoute.value.query.search;
+      this.searchValue = await this.$router.currentRoute.value.query.search;
     }
     if (this.$router.currentRoute.value.params.page) {
-      this.currentPage = this.$router.currentRoute.value.params.page;
+      this.currentPage = await this.$router.currentRoute.value.params.page;
     }
-    this.downloadPage();
+
+    await this.downloadPage();
+    await this.getCountPages();
+    console.log(this.usersList);
   },
   methods: {
     async downloadPage() {
@@ -109,21 +128,28 @@ export default {
         this.limitUsers,
         this.searchValue
       );
-      const countUsersRequest = await usersAPI.getCountUsers();
+
+      const countUsersRequest = await usersAPI.getCountUsers(this.searchValue);
       this.countUsers = countUsersRequest.count;
+      await this.getCountPages();
     },
     prevPage() {
-      --this.currentPage;
-      this.changeUrl();
-      this.downloadPage();
+      this.$router.currentRoute.value.params.page = "";
+      if (this.currentPage > 0) {
+        --this.currentPage;
+        this.changeUrl();
+        this.downloadPage();
+      }
     },
     nextPage() {
-      ++this.currentPage;
-      this.changeUrl();
-      this.downloadPage();
+      if (this.currentPage < this.countPages) {
+        ++this.currentPage;
+        this.changeUrl();
+        this.downloadPage();
+      }
     },
-    countPages() {
-      return Math.ceil(this.countUsers / this.limitUsers);
+    getCountPages() {
+      this.countPages = Math.ceil(this.countUsers / this.limitUsers);
     },
     clickPaginationPage(index) {
       this.currentPage = index + 1;
@@ -137,23 +163,36 @@ export default {
         : router.push(`/admin/${this.currentPage}`);
     },
     async search() {
-      router.push(`/admin/${this.currentPage}?search=${this.searchValue}`);
-      this.usersList = await usersAPI.getUsersList(
-        this.startIndex,
-        this.limitUsers,
-        this.searchValue
-      );
+      this.currentPage = 1;
+      this.changeUrl();
+      this.downloadPage();
     },
     async deleteUser(id) {
       const response = await usersAPI.deleteUser(id);
       const countUsersRequest = await usersAPI.getCountUsers();
       this.countUsers = countUsersRequest.count;
-      if (this.countPages() < this.currentPage) {
+      if (this.countPages < this.currentPage) {
         this.currentPage = this.currentPage - 1;
-        console.log(this.countPages(), this.currentPage);
       }
       this.changeUrl();
       this.downloadPage();
+    },
+    clearSearch() {
+      this.searchValue = "";
+      router.push(`/admin`);
+      this.downloadPage();
+    },
+    async changeLevel(id) {
+      const options = document.getElementById(id).options;
+      const newRating = options[options.selectedIndex].value;
+      const request = await usersAPI.updateRating(id, +newRating);
+      console.log(request);
+    },
+    async changeStatus(e) {
+      const newStatus = e.currentTarget.checked;
+      const id = e.currentTarget.getAttribute("data");
+      const request = await usersAPI.updateStatusAdmin(id, +newStatus);
+      console.log(request);
     },
   },
 };

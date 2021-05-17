@@ -2,7 +2,6 @@ import axios, { AxiosResponse } from "axios";
 import { getAccessToken } from "@/services/tokensHandling";
 
 import utils from "@/services/utils";
-console.log();
 const instance = axios.create({
   withCredentials: false,
   baseURL: `http://${process.env.VUE_APP_API_URL}`,
@@ -17,7 +16,6 @@ export const usersAPI = {
   },
 
   refrehsTokens(refreshToken) {
-    debugger;
     return instance
       .get("/users/refresh/token", {
         headers: { Authorization: `JWT ${refreshToken}` },
@@ -98,14 +96,17 @@ export const usersAPI = {
   },
 
   getUsersList(min, max, search, country, category, stack, sort) {
-    console.log(min, max, search, country, category, stack, sort);
     return instance
-      .post(`/users`, { min, max, search, country, category, stack, sort })
+      .get(
+        `/users?min=${min}&max=${max}&search=${search}&country=${country}&category=${category}&stack=${stack}&sort=${sort}`
+      )
       .then((res) => res.data);
   },
 
-  getCountUsers() {
-    return instance.get(`/users/count`).then((res) => res.data);
+  getCountUsers(search) {
+    return instance
+      .get(`/users/count?search=${search}`)
+      .then((res) => res.data);
   },
 
   deleteUser(userId) {
@@ -130,9 +131,7 @@ export const usersAPI = {
 
   checkUserEmail(email) {
     return instance
-      .post(`/users/email`, {
-        email: email,
-      })
+      .get(`/users/email?email=${email}`)
       .then((res) => res.data)
       .catch((error) => error.response.data);
   },
@@ -143,6 +142,45 @@ export const usersAPI = {
         id: id,
         password: password,
       })
+      .then((res) => res.data)
+      .catch((error) => error.response.data);
+  },
+
+  async updateRating(id, rating) {
+    console.log(id, rating);
+    const accesToken = await getAccessToken();
+    return instance
+      .put(
+        "users/rating",
+        {
+          id: id,
+          rating: rating,
+        },
+        {
+          headers: {
+            Authorization: `JWT ${accesToken}`,
+          },
+        }
+      )
+      .then((res) => res.data)
+      .catch((error) => error.response.data);
+  },
+
+  async updateStatusAdmin(id, status) {
+    const accesToken = await getAccessToken();
+    return instance
+      .put(
+        "users/status",
+        {
+          id: id,
+          status: status,
+        },
+        {
+          headers: {
+            Authorization: `JWT ${accesToken}`,
+          },
+        }
+      )
       .then((res) => res.data)
       .catch((error) => error.response.data);
   },

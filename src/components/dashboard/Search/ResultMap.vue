@@ -15,6 +15,12 @@
 </template>
 
 <script>
+import { Icon } from "leaflet";
+
+// The following helps to avoid "net::ERR_INVALID_URL" errors in Chromium-like browsers without the need to unnecessarily import the files.
+Icon.Default.prototype.options.imagePath = ".";
+Icon.Default.prototype.options.iconUrl = "";
+Icon.Default.prototype.options.shadowUrl = "";
 import "leaflet/dist/leaflet.css";
 import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
 export default {

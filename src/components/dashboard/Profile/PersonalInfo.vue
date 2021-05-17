@@ -79,7 +79,7 @@
       </div>
       <div class="admin-field fields-block__item">
         <h3 class="card__input-title">RATE</h3>
-        <input type="text" class="input-base" v-model="rate" />
+        <input type="number" class="input-base" v-model="rate" />
       </div>
 
       <div class="admin-field fields-block__item fields-block__item_right">
@@ -111,6 +111,7 @@ export default {
     userInfoData: Object,
     categoriesList: Array,
     stackList: Array,
+    countriesList: Array,
   },
   data() {
     return {
@@ -126,7 +127,6 @@ export default {
       username: this.userInfoData.username,
       stack: this.userInfoData.stack ? this.userInfoData.stack.split(",") : "",
       gendersList: ["Mr", "Ms", "Girl", "Boy", "Other"],
-      countriesList: ["Ukraine", "Tourkey", "Egypt"],
       phoneCodesList: [
         { code: "+380 ", src: "ukraine" },
         { code: "+20 ", src: "egypt" },

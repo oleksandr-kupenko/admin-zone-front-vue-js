@@ -43,10 +43,9 @@ export default {
     selected: String,
   },
   data() {
-    const code = this.selected ? this.selected : "+380";
     return {
-      currentPhoneValue: { code: code, src: "ukraine" },
-      code,
+      currentPhoneValue: this.getPhone(),
+      code: "",
     };
   },
   mounted() {
@@ -92,6 +91,21 @@ export default {
           : this.currentPhoneValue.code + event.target.value;
       } else {
         event.preventDefault();
+      }
+    },
+    getPhone() {
+      if (this.selected) {
+        let phone = this.selected.toString();
+        let currentOption;
+        this.options.forEach((option) => {
+          let optionString = new String(option.code);
+          if (phone.includes(optionString.trim())) {
+            return (currentOption = option);
+          }
+        });
+        return { code: this.selected, src: currentOption.src };
+      } else {
+        return { code: "+380 ", src: "ukraine" };
       }
     },
   },

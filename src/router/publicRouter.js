@@ -7,12 +7,12 @@ import SignUp2 from "../components/public/SignUp/SignUp2";
 import AlmostReady from "../components/public/AlmostReady/AlmostReady";
 
 const publicPagesRoutes = [
-  {
+  /*   {
     path: "/",
     component: Home,
-  },
+  }, */
   {
-    path: "/sign-1",
+    path: "/",
     component: Sign1,
     meta: {
       title: "Sign in",
@@ -32,7 +32,7 @@ const publicPagesRoutes = [
     props: {
       question: "Back to",
       offer: "Sign in",
-      link: "/sign-1",
+      link: "/",
     },
   },
   {
@@ -45,7 +45,7 @@ const publicPagesRoutes = [
       question: "Back to",
       offer: "Sign in",
       message: "Please check your email to reset your password",
-      link: "/sign-1",
+      link: "/",
     },
   },
   {
@@ -69,7 +69,7 @@ const publicPagesRoutes = [
     props: {
       question: "Already have an account?",
       offer: "Log In",
-      link: "/sign-1",
+      link: "/",
     },
   },
   {
@@ -81,7 +81,7 @@ const publicPagesRoutes = [
     props: {
       question: "Already have an account?",
       offer: "Log In",
-      link: "/sign-1",
+      link: "/",
     },
   },
   {
@@ -94,7 +94,7 @@ const publicPagesRoutes = [
       question: "Already have an account?",
       offer: "Log In",
       message: "Please check your email to activate your account",
-      link: "/sign-1",
+      link: "/",
     },
   },
 ];

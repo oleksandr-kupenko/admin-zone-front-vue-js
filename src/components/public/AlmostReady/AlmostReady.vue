@@ -30,7 +30,7 @@ export default {
     if (JSON.parse(localStorage.getItem("idUserForChangePass"))) {
       setTimeout(() => router.push("/sign-4"), 5000);
     } else {
-      setTimeout(() => router.push("/sign-1"), 5000);
+      setTimeout(() => router.push("/"), 5000);
     }
   },
 };

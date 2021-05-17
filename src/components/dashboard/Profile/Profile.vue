@@ -31,6 +31,7 @@
         :userInfoData="userInfoData"
         :categoriesList="categoriesList"
         :stackList="stackList"
+        :countriesList="countriesList"
         @updatedPhoto="updatedPhoto"
     /></template>
     <template v-if="!showingBlockPersonal && !isLoading"
@@ -45,6 +46,7 @@ import PersonalInfo from "./PersonalInfo";
 import AccauntInfo from "./AccauntInfo";
 import { usersAPI } from "@/api/api";
 import stacklist from "@/data/stackList";
+import countriesList from "@/data/countriesList";
 
 export default {
   name: "Profile",
@@ -61,6 +63,7 @@ export default {
       userInfoData: "",
       categoriesList: "",
       stackList: stacklist(),
+      countriesList: countriesList(),
       userId: this.$router.currentRoute.value.params.id,
     };
   },
